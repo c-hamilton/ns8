@@ -1,5 +1,5 @@
 /*
-### User
+User
 - email
   - string
   - This field is required to create a new user
@@ -14,9 +14,9 @@
 */
 
 export interface User {
-  id: number;
-  name: string;
+  id: string;
+  name?: string;
   email: string;
   password: string;
-  phonenumber?: string; // I like nullable rather than optional but hey
+  phonenumber?: string;
 }

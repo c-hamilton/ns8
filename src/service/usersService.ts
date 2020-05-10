@@ -1,23 +1,9 @@
-import { User } from "../model/user.interface";
-import { usersRouter } from "../route/users.router";
+import { User } from "../model/userInterface";
+import { usersRouter } from "../route/usersRouter";
+import { createUUID } from "./helper";
+import { users } from "../model/data/userData";
 
 let VALID_PHONE_NUMBER: RegExp = /[0-9]{3}-[0-9]{3}-[0-9]{4}/;
-
-const users: Array<User> = [
-  {
-    id: 1,
-    name: "Cassie",
-    email: "testy@test.com",
-    password: "password",
-  },
-  {
-    id: 2,
-    name: "Bob",
-    email: "bob@test.com",
-    password: "test123",
-    phonenumber: "808-746-1238",
-  },
-];
 
 const validateUser = (newuser: User): any => {
   let response = {
@@ -48,27 +34,26 @@ const validateUser = (newuser: User): any => {
   return response;
 };
 
-const generateId = (): number => {
-  return new Date().valueOf();
+const generateId = (userid: number): number => {
+  return new Date().valueOf() + userid;
 };
 
 export const findAll = async (): Promise<Array<User>> => {
   return users;
 };
 
-export const find = async (id: number): Promise<User> => {
+export const find = async (id: string): Promise<User> => {
   const found: User | undefined = users.find((u: User) => u.id === id);
   if (found) {
     return found;
   }
-  console.log("No user found", id);
   throw new Error("No record found for userid." + id);
 };
 
 export const create = async (newuser: User): Promise<void> => {
   let validateUserResult = validateUser(newuser);
   if (validateUserResult["status"] == "Success") {
-    const id = generateId();
+    const id = createUUID();
     users.push({ ...newuser, id });
     return;
   }

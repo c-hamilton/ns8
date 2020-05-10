@@ -1,6 +1,6 @@
 import express, { Request, Response } from "express";
-import * as EventsService from "../resolver/events.service";
-import { Event } from "../model/event.interface";
+import * as EventsService from "../service/eventsService";
+import { Event } from "../model/eventInterface";
 
 export const eventsRouter = express.Router();
 
@@ -23,11 +23,9 @@ const getRecentEvents = async (req: Request, res: Response) => {
 };
 
 const getEventByUserId = async (req: Request, res: Response) => {
-  const id: number = parseInt(req.params.id, 10);
-
+  const id: string = req.params.id;
   try {
     const event: Array<Event> = await EventsService.findByUserId(id);
-
     res.status(200).send(event);
   } catch (e) {
     res.status(404).send(e.message);
@@ -36,10 +34,8 @@ const getEventByUserId = async (req: Request, res: Response) => {
 
 const createEvent = async (req: Request, res: Response) => {
   try {
-    const Event: Event = req.body.Event;
-
-    await EventsService.create(Event);
-
+    const event: Event = req.body;
+    await EventsService.create(event);
     res.sendStatus(201);
   } catch (e) {
     res.status(400).send(e.message);

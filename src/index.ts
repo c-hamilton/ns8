@@ -1,19 +1,11 @@
-/**
- * Required External Modules
- */
-
 import * as dotenv from "dotenv";
 import express from "express";
 import cors from "cors";
 import helmet from "helmet";
-import { usersRouter } from "./route/users.router";
-import { eventsRouter } from "./route/events.router";
+import { usersRouter } from "./route/usersRouter";
+import { eventsRouter } from "./route/eventsRouter";
 
 dotenv.config();
-
-/**
- * App Variables
- */
 
 if (!process.env.PORT) {
   process.exit(1);
@@ -28,7 +20,7 @@ app.use(helmet());
 app.use(cors());
 app.use(express.json());
 
-/*
+/* From the docs
 The app.use() method can take as an argument an optional path and a callback function 
 that represents one or more middleware functions. In this case, you tell your Express app 
 to invoke the usersRouter middleware functions whenever the /users route path is requested.

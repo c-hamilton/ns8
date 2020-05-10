@@ -11,10 +11,17 @@ const valid_user = {
   password: "supersecure",
 };
 
+const another_valid_user = {
+  email: "test@ns8.com",
+  password: "passwordIsPizza",
+  phone: "333-222-1111",
+};
+
 const valid_event = {
   id: 123,
   timestamp_utc: Date.now(),
   user_id: 1,
+  type: "Login",
 };
 
 describe("Test Users and Events", () => {
@@ -33,6 +40,14 @@ describe("Test Users and Events", () => {
 
   it("Create User success", async () => {
     const result = await request(app).post(USERS_ENDPOINT).send(valid_user);
+    expect(result.text).toContain("Created");
+    expect(result.status).toEqual(201);
+  });
+
+  it("Create User success with their testcase", async () => {
+    const result = await request(app)
+      .post(USERS_ENDPOINT)
+      .send(another_valid_user);
     expect(result.text).toContain("Created");
     expect(result.status).toEqual(201);
   });
@@ -62,9 +77,11 @@ describe("Test Users and Events", () => {
   });
 
   it("Get Recent Events", async () => {
-    const result = await request(app).get(EVENTS_ENDPOINT);
-    expect(result.text).toContain("Login");
-    expect(result.status).toEqual(200);
+    const recent_result = await request(app).get(EVENTS_ENDPOINT + "recent");
+    const all_result = await request(app).get(EVENTS_ENDPOINT);
+    expect(recent_result.text).toContain("Login");
+    expect(recent_result.status).toEqual(200);
+    expect(recent_result.text.length).toBeLessThan(all_result.text.length);
   });
 
   it("Get Events by ID", async () => {
@@ -78,6 +95,19 @@ describe("Test Users and Events", () => {
     const result = await request(app).post(EVENTS_ENDPOINT).send(valid_event);
     expect(result.text).toContain("Created");
     expect(result.status).toEqual(201);
+  });
+
+  it("Fail create Event-- no event type", async () => {
+    let clone_event = valid_event;
+    delete clone_event["type"];
+    const result = await request(app).post(EVENTS_ENDPOINT).send(clone_event);
+    expect(result.text).toContain("Bad Request");
+    expect(result.status).toEqual(400);
+
+    clone_event["type"] = "";
+    const result2 = await request(app).post(EVENTS_ENDPOINT).send(clone_event);
+    expect(result2.text).toContain("Bad Request");
+    expect(result2.status).toEqual(400);
   });
 
   afterAll(async (done) => {

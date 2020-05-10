@@ -1,6 +1,6 @@
 import express, { Request, Response } from "express";
-import * as UsersService from "../resolver/users.service";
-import { User } from "../model/user.interface";
+import * as UsersService from "../service/usersService";
+import { User } from "../model/userInterface";
 
 export const usersRouter = express.Router();
 
@@ -14,7 +14,7 @@ const getUsers = async (req: Request, res: Response) => {
 };
 
 const getById = async (req: Request, res: Response) => {
-  const id: number = parseInt(req.params.id, 10);
+  const id: string = req.params.id;
   try {
     const user: User = await UsersService.find(id);
     res.status(200).send(user);
