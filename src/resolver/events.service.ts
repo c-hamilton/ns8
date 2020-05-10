@@ -1,4 +1,4 @@
-import { Event, Events } from "../model/event.interface";
+import { Event /* */ } from "../model/event.interface";
 
 /*
 ### Event
@@ -8,46 +8,52 @@ import { Event, Events } from "../model/event.interface";
 
 */
 
-const events: Events = {
-  1: {
-    id: 1,
-    user_id: 1,
-    timestamp_utc: Date.now(),
-  },
-  2: {
-    id: 2,
-    user_id: 1,
-    timestamp_utc: Date.now(),
-  },
-  3: {
-    id: 2465756,
-    user_id: 1,
-    timestamp_utc: Date.now(),
-  },
-  4: {
-    id: 22342,
-    user_id: 2,
-    timestamp_utc: Date.now(),
-  },
+const yesterday = () => {
+  return new Date(new Date().getTime() - 24 * 60 * 60 * 1000).getTime() / 1000;
 };
 
-const validateEvent = () => {
-  // check that timestamp is valid (before Date.now())
+const events: Array<Event> = [
+  {
+    id: 1,
+    user_id: 1,
+    created: Date.now(),
+    type: "Login",
+  },
+  {
+    id: 2,
+    user_id: 1,
+    created: Date.now(),
+    type: "Login123",
+  },
+  {
+    id: 2465756,
+    user_id: 1,
+    created: yesterday() - 5000,
+    type: "Click",
+  },
+  {
+    id: 22342,
+    user_id: 2,
+    created: yesterday() - 1000000,
+    type: " ",
+  },
+];
+
+const validateEvent = (event: Event) => {
   // check that, user id matches a user in system
   // check that type field is a non empty string
 };
 
-export const findAll = async (): Promise<Events> => {
-  return events;
+export const findRecent = async (): Promise<Array<Event>> => {
+  return events.filter((e: Event) => e.created > yesterday());
 };
 
-export const findById = async (id: number): Promise<Event> => {
-  const found: Event = events[id];
-  if (found) {
-    return found;
-  }
-  console.log("No event found", id);
-  throw new Error("No record found for eventif." + id);
+export const findByUserId = async (user_id: number): Promise<Array<Event>> => {
+  return events.filter((e: Event) => e.user_id === user_id);
+};
+
+export const findAll = async (): Promise<Array<Event>> => {
+  return events;
 };
 
 export const create = async (newEvent: Event): Promise<void> => {

@@ -21,11 +21,8 @@ if (!process.env.PORT) {
 
 const PORT: number = parseInt(process.env.PORT as string, 10);
 
-const app = express();
-
-/**
- *  App Configuration
- */
+// need to export it for jest tests
+export const app = express();
 
 app.use(helmet());
 app.use(cors());
@@ -39,17 +36,10 @@ to invoke the usersRouter middleware functions whenever the /users route path is
 app.use("/users", usersRouter);
 app.use("/events", eventsRouter);
 
-/**
- * Server Activation
- */
-
-const server = app.listen(PORT, () => {
+// need to export for the jest tests to close it
+export const server = app.listen(PORT, () => {
   console.log(`Listening on port ${PORT}`);
 });
-
-/**
- * Webpack HMR Activation
- */
 
 type ModuleId = string | number;
 

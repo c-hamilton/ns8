@@ -7,10 +7,7 @@
 
 export interface Event {
   id: number;
-  timestamp_utc: number;
+  created: number;
   user_id: number;
-}
-
-export interface Events {
-  [key: number]: Event;
+  type: string;
 }

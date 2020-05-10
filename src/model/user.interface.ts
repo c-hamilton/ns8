@@ -14,13 +14,9 @@
 */
 
 export interface User {
-    id: number;
-    name: string;
-    email: string;
-    password: string;
-    phonenumber: number | null;
-}
-
-export interface Users {
-  [key: number]: User;
+  id: number;
+  name: string;
+  email: string;
+  password: string;
+  phonenumber?: string; // I like nullable rather than optional but hey
 }
